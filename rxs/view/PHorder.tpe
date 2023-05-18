@@ -1,0 +1,330 @@
+<script src="resource/js/jquery.tablesorter.min.js?v={{$ver}}"></script>
+<script type="text/javascript" src="resource/js/artdialog/jquery.artDialog.js?skin=blue"></script>
+<script type="text/javascript" src="resource/js/artdialog/plugins/iframeTools.js"></script>
+
+<link href="/resource/css/theme.blue.min.css?v={{$ver}}" rel="stylesheet" type="text/css"/>
+<script>
+	upv = function(){
+		var rtype=$("select[name=rxtype]").val();
+		if(rtype=="" || rtype=="0")
+			$("#mapform").submit();
+	}
+	$(function(){
+		$("#orderTable").tablesorter({
+			theme: "blue",
+			widgets: ['zebra'],
+			headers: {
+				3:{
+					sorter:false
+				},
+				4:{
+					sorter:false
+				},
+				6:{
+					sorter:false
+				},
+				
+			},
+		});
+		if('{{$msg}}'!= '')
+			alert('{{$msg}}');
+	});
+	var today = '{{date("Y-m-d")}}';
+	function btnClick(act,oid){
+		var cntstr ='';
+		switch(act){
+			case "cls":
+				//var cls_reason = prompt('請輸入取消原因','');
+				//if(cls_reason==null)
+					//return;
+				//else
+					//$("#bk").val(cls_reason);
+				//break;
+				var cnt = function(){
+						$("#diaCnt").html("請輸入取消原因:");
+					};
+				var okFun = function(){
+					$("#bk").val($("#clsr").val());
+					$("#act").val(act);
+					$("#val").val(oid);
+					$("#mapform").submit();
+				}
+				cntstr = $("#clsTxt").text().replace('@strv','');
+				cntstr = cntstr.replace('@strh','取消原因');
+			case "okt":
+				if(!cnt){
+					cntstr = $("#clsTxt").text().replace('@strv',today);
+					cntstr = cntstr.replace('@strh','日期格式:2020-01-01');
+					var cnt = function(){
+						$("#dateLimit").show();
+						$("#diaCnt").html("請輸入可領藥期限:");
+					};
+					var okFun = function(){
+						var mdate = $("#clsr").val();
+						var dline = $("#dline").val();
+						if(mdate.match(/^\d\d\d\d\-\d\d\-\d\d$/) && dline.match(/^\d\d\d\d\-\d\d\-\d\d$/) && Date.parse(dline).valueOf()>Date.parse(mdate).valueOf()){
+							$("#bk").val(mdate+'@'+dline);
+							$("#act").val(act);
+							$("#val").val(oid);
+							$("#mapform").submit();
+						}else{
+							alert('日期格式錯誤或者期限區間錯誤');
+							return false;
+						}
+					}
+				}
+				//var okDate = prompt('請輸入可領藥日期(yyyy-mm-dd)','');
+				//console.log(okDate.match(/\d{4}\-\d{2}\-\d{2}/)?1:0);
+				//if(okDate==null)
+					//return;
+				//else if(!
+				//	$("#bk").val(cls_reason);
+				
+				var dialog=art.dialog({
+					id: 'testID',
+					title: '慢箋編號:'+oid,
+					padding: 0,
+					content: cntstr,
+					cancel:true,
+					cancelVal: '\u95dc\u9589',
+					okVal:'確認',
+					ok:okFun,
+					lock:true,
+					init:cnt,
+				});
+				dialog.show();
+				
+				break;
+			default:
+				$("#act").val(act);
+				$("#val").val(oid);
+				$("#mapform").submit();
+				break;
+		}
+		
+	}
+</script>
+<textarea style="display:none;" id="clsTxt">
+	<div style="width:300px;height:80px;padding:20px;">
+		<div style="width:100%;" id="diaCnt"></div>
+		<input type="text" id="clsr" style="width:100%;" value="@strv" placeholder="@strh">
+		<div id="dateLimit" style="display:none;width:100%;">
+			<div style="width:100%;text-align:center;">至</div>
+			<input type="text" id="dline" style="width:100%;" value="{{date('Y-m-d',strtotime('+7 day'))}}" placeholder="日期格式:2020-01-01">
+		</div>
+	</div>
+</textarea>
+
+
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:60px;
+		width:60px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+	.srcSel{
+		width: auto;
+		display: unset;
+	}
+	.defOpt{
+		color:#848484;
+	}
+	.srcform{
+		font-size:14pt;
+		width:100%;
+		text-align:center;
+		margin-bottom:40px;
+	}
+	.tablesorter{
+		width:1140px;
+		margin-left:auto;
+		margin-right:auto;
+		font-size:14pt;
+		text-align:center;
+	}
+	.tablesorter th,.aui_title{
+		font-size:14pt;
+	}
+	.rating{
+		margin-bottom:0px;
+		padding:0px;
+		width:125px;
+	}
+	.rating li{
+		float:left;
+		width:25px;
+		height:25px;
+	}
+	.btn{
+		margin-bottom:5px;
+		font-size:16pt;
+	}
+	.cmdDiv{
+		width:100%;
+		word-wrap:break-word; 
+		word-break:break-all;
+		background-color: #f4f7f4;
+		padding: 5px;
+		border-radius: 15px;
+	}
+	.rxImg{
+		height:135px;
+		max-width:200px;
+	}
+	.rxImg:hover{
+		position: absolute;
+		height: 600px;
+		max-width:800px;
+		z-index:99999999;
+		border:2px blue solid;
+		right:220px;
+	}
+</style>
+
+
+<div class="rxmain">
+	<div style="width:100%;text-align:center;">
+		<span style="font-size:36pt;font-weight:bolder;">藥局管理</span>
+	</div>
+	<form id="mapform" class="srcform" style="" action="/PHorder" method="post" >
+		<input type="hidden" value="" id="val" name="val">
+		<input type="hidden" value="" id="act" name="act">
+		<input type="hidden" value="" id="bk" name="bk">
+		<select name="rxtype" class="srcSel form-control tw-sel">
+			<option value="" class="defOpt">慢箋狀態</option>
+			{{foreach from=$ORDER_TYPE key=otype item=ty}}
+				<option value="{{$otype}}" {{if $otype == $itemVal['rxtype']}}selected{{/if}}>{{$ty}}</option>
+			{{/foreach}}
+		</select>
+		<select name="rxtime" class="srcSel form-control tw-sel">
+			<option value="3" {{if $itemVal['rxtime'] == 3 }}selected{{/if}}>三個月內</option>
+			<option value="6" {{if $itemVal['rxtime'] == 6 }}selected{{/if}}>半年內</option>
+			<option value="12"{{if $itemVal['rxtime'] == 12}}selected{{/if}}>一年內</option>
+			<option value="24"{{if $itemVal['rxtime'] == 24}}selected{{/if}}>兩年內</option>
+		</select>
+		<input type="submit" class="btn btn-sm btn-primary" value="搜尋">
+		<div style="overflow-x:auto;width:100%">
+			<table class="tablesorter" id="orderTable">
+				<thead>
+					<th>編號</th>
+					<th>狀態</th>
+					<th width="120px">上傳時間</th>
+					<th width="230px">患者資訊</th>
+					<th>慢箋</th>
+					<th width="125px">就診醫院</th>
+					<th width="200px">操作</th>
+				</thead>
+				<tbody>
+					{{foreach from=$rx_order item=order}}
+					<tr>
+						<td>{{$order[0]}}</td>
+						<td {{if $order[1]==4 || ($order[1]==2 && time()>strtotime($order[13]))}}style="color:red"{{else if $order[1]==2}}style="color:green;"{{/if}}>
+							{{$ORDER_TYPE[$order[1]]}}
+							{{if $order[1]==2 && time()>strtotime($order[13])}}
+								<br>
+								超過領藥期限
+								<br>
+								{{$order[13]}}
+							{{/if}}
+							<br>
+							<a href="/Cmsg?rx={{$order[0]}}" title="雲端通"><img style="height:25px;" src="/resource/img/mtk.png"></a>
+						</td>
+						<td>{{$order[2]}}</td>
+						<td>
+							<div style="float:left;text-align:right;">
+								姓名&nbsp;:&nbsp;		
+								<br>身分證號&nbsp;:&nbsp;	
+								<br>性別&nbsp;:&nbsp;	
+								<br>生日&nbsp;:&nbsp;	
+								<br>電話&nbsp;:&nbsp;
+							</div>
+							<div style="float:left;text-align:left;">
+								{{$order[3]}}
+								<br>{{$order[4]}}
+								<br>{{$sary[$order[5]]}}
+								<br>{{$order[6]}}
+								<br>{{$order[7]}}
+							</div>
+						</td>
+						<td>
+							<a href="/photo/rx_img/rx{{$order[0]}}.jpg" target="_blank">
+								<img src="/photo/rx_img/rx{{$order[0]}}.jpg" class="rxImg">
+							</a>
+						</td>
+						<td>{{$order[8]}}</td>
+						<td style="text-align: center;vertical-align: middle;">
+							{{if $order[1]==0}}
+								<input class="btn btn-xs btn-info" type="button" onclick="btnClick('ent',{{$order[0]}});" value="確認慢箋">
+							{{/if}}
+							{{if $order[1]==1}}
+								{{if strtotime($order[10]) > $today}}
+									可領藥期限:
+									<br>
+									<div onclick="btnClick('okt',{{$order[0]}});" style="color:blue;cursor:pointer;">
+										{{$order[10]}}
+										<br>至<br>
+										{{$order[13]}}
+										<br>
+									</div>
+								{{else}}
+									<input class="btn btn-xs btn-success" type="button" onclick="btnClick('okt',{{$order[0]}});" value="備藥完成">
+								{{/if}}
+							{{/if}}
+							{{if $order[1]==2}}
+								<input class="btn btn-xs btn-primary" type="button" onclick="btnClick('endt',{{$order[0]}});" value="慢箋已領">
+							{{/if}}
+							{{if $order[1]<3}}
+								<input class="btn btn-xs btn-danger" type="button" onclick="btnClick('cls',{{$order[0]}});" value="取消慢箋">
+							{{/if}}
+							
+							{{if $order[1]==3}}
+								<ul class="rating"> 
+									<li style="background:url(/resource/img/{{if $order[9]<1}}n{{/if}}star.png?{{$ver}}" ></li> 
+									<li style="background:url(/resource/img/{{if $order[9]<2}}n{{/if}}star.png?{{$ver}}" ></li> 
+									<li style="background:url(/resource/img/{{if $order[9]<3}}n{{/if}}star.png?{{$ver}}" ></li> 
+									<li style="background:url(/resource/img/{{if $order[9]<4}}n{{/if}}star.png?{{$ver}}" ></li> 
+									<li style="background:url(/resource/img/{{if $order[9]<5}}n{{/if}}star.png?{{$ver}}" ></li> 
+								</ul>
+								<br>
+								{{if $order[9]==0 }}
+									未評分
+								{{else}}
+									<div style="width:100%;text-align:left;">
+										會員評論:
+									</div>
+									<div class="cmdDiv" style="word-break: break-all;width:200px;">
+									{{$order[12]}} 
+									</div>
+								{{/if}}
+								
+							{{/if}}
+							{{if $order[1]==4 && $order[11]!=""}}
+								<font color="red">
+									取消原因:
+									<br>
+									{{$order[11]}}
+								</font>
+							{{/if}}
+						</td>
+					</tr>
+					{{/foreach}}
+				</tbody>
+			</table>
+		</div>
+	</form>
+	
+</div>

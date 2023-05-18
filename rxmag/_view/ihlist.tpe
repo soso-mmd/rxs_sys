@@ -1,0 +1,69 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script type="text/javascript" src="/resource/js/jquery-1.11.3.min.js?v={{$ver}}"></script>
+		<script type="text/javascript" src="/resource/js/bootstrap.min.js?v={{$ver}}"></script>
+		<script type="text/javascript" src="/resource/js/main.js?v={{$ver}}"></script>
+		<link href="/resource/css/bootstrap.min.css?v={{$ver}}" rel="stylesheet" type="text/css">
+		<link href="/resource/css/main.css?v={{$ver}}" rel="stylesheet" type="text/css">
+		<script>
+			$(function(){
+				top.SetCwinHeight();
+			});
+			function btnClick(act,aid){
+				$("input[name=act]").val(act);
+				$("input[name=val]").val(aid);
+				$("#mform").submit();
+			}
+		</script>
+	</head>
+	<body>
+		<div style="width:100%;text-align:center;margin-bottom:30px;">
+			<span style="font-size:36pt;font-weight:bolder;">推薦藥局</span>
+		</div>
+		<form id="mform" class="srcform" action="/z/ihlist" method="post" >
+			<input type="hidden" name="act">
+			<input type="hidden" name="val">
+			狀態:
+			<select name="ihtype" class="srcSel form-control tw-sel" onchange="$('#mform').submit();">
+				<option value="0" {{if $ihtype=="0"}}selected{{/if}}>未處理</option>
+				<option value="1" {{if $ihtype=="1"}}selected{{/if}}>以處理</option>
+				<option value="a" {{if $ihtype=="a"}}selected{{/if}}>全部</option>
+			</select>
+			<table class="table table-sm table-dark">
+				<thead>
+					<tr>
+						<th scope="col">名稱</th>
+						<th scope="col">地址</th>
+						<th scope="col">時間</th>
+						<th scope="col">狀態</th>
+						<th scope="col">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+				{{foreach from=$iph item=ph}}
+				<tr>
+					<td>{{$ph[1]}}</td>
+					<td>{{$ph[2]}}</td>
+					<td>{{$ph[3]}}</td>
+					<td>
+						{{if $ph[4]==0}}
+							<span style="color:red;">未處理</span>
+						{{elseif $ph[4]==1}}
+							<span style="color:green;">已完成</span>
+						{{/if}}
+					</td>
+					<td>
+						{{if $ph[4]==0}}
+							<input class="btn btn-xs btn-success" type="button" onclick="btnClick('okt',{{$ph[0]}});" value="處理">
+						{{/if}}
+					</td>
+				</tr>
+				{{/foreach}}
+			  </tbody>
+			</table>
+		</form>
+	</body>
+</html>

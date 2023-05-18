@@ -1,0 +1,273 @@
+﻿<script src="resource/js/jquery.tablesorter.min.js?v={{$ver}}"></script>
+<link href="/resource/css/theme.blue.min.css?v={{$ver}}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resource/js/artdialog/jquery.artDialog.js?skin=blue"></script>
+<script type="text/javascript" src="resource/js/artdialog/plugins/iframeTools.js"></script>
+<script>
+	{{if count($rx_user)==0}} 
+		alert("請先新增慢箋使用者");
+		location.href="/RXregister";
+	{{/if}}
+	$(function(){
+		$("#orderTable").tablesorter({
+			theme: "blue",
+			widgets: ['zebra'],
+			headers: {
+				6:{
+					sorter:false
+				}
+			}
+		});
+		if('{{$msg}}'!= '')
+			alert('{{$msg}}');
+		blink(".blind");
+	});
+	function blink(selector){
+		$(selector).fadeOut('slow', function(){
+			$(this).fadeIn('slow', function(){
+				blink(this);
+			});
+		});
+	}
+	function printCmt(clv){
+		for(var i=1; i<6; i++){
+			if(i <= clv){
+				$("li[clv='"+i+"']").css("background","url(/resource/img/star.png?{{$ver}})");
+			}else{
+				$("li[clv='"+i+"']").css("background","url(/resource/img/nstar.png?{{$ver}})");
+			}
+		}
+		$("#sco").val(clv);
+	}
+	function cmt(oid,clv,cm){
+		
+		var cnt = function(){
+			printCmt(clv);
+			$(".rating li").hover(function(){
+				var cclv = $(this).attr('clv');
+				printCmt(cclv);
+			});
+			$("#cmt").val(cm);
+		};
+		var okFun = function(){
+			if($("#sco").val()>0){
+				$("#cmtForm").submit();
+			}else{
+				alert("尚未評分");
+				return false;
+			}
+		};
+		var dialog=art.dialog({
+			id: 'testID',
+			title: '慢箋編號:'+oid,
+			padding: 0,
+			content: $("#cmtTxt").text().replace("$oid",oid),
+			cancel:true,
+			cancelVal: '\u95dc\u9589',
+			okVal:'確認',
+			ok:okFun,
+			lock:true,
+			init:cnt,
+		});
+		dialog.show();
+		
+	}
+	function btnAction(act,oid){
+		switch(act){
+			case "cls":
+				if(!confirm('確認要取消慢箋編號:'+oid+'  ?'))
+					return;
+				break;
+		}
+		$("#act").val(act);
+		$("#val").val(oid);
+		$("#mapform").submit();
+	}
+	
+</script>
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:35px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+	.srcSel{
+		width: auto;
+		display: unset;
+	}
+	.defOpt{
+		color:#848484;
+	}
+	.srcform{
+		font-size:14pt;
+		width:100%;
+		text-align:center;
+		margin-bottom:40px;
+	}
+	.tablesorter{
+		width:1140px;
+		margin-left:auto;
+		margin-right:auto;
+		font-size:14pt;
+		text-align:center;
+	}
+	.tablesorter th,.aui_title{
+		font-size:14pt;
+	}
+	.rating{
+		margin-bottom:0px;
+		padding:0px;
+		width:175px;
+		display:flow-root;
+	}
+	.rating li{
+		float:left;
+		width:25px;
+		height:25px;
+		background:url(/resource/img/nstar.png?{{$ver}});
+		cursor:pointer;
+	}
+	.btn{
+		font-size:16pt;
+	}
+	.addfont{
+		font-size: 21pt;
+		font-weight: bolder;
+		vertical-align: top;
+	}
+	.srchtop{
+		margin-top:5px;
+	}
+	@media screen and (max-width: 991px){
+		.addfont{
+			display:none;
+		}
+	}
+</style>
+<textarea style="display:none;" id="cmtTxt">
+	<form id="cmtForm" action="/RXmain" method="post" >
+		<input name="act" value="cmtOrd" type="hidden">
+		<input name="val" id="val" value="$oid" type="hidden">
+		<input name="sco" id="sco" value="" type="hidden">
+		<div style="width:300px;height:80px;padding:20px;">
+			<div style="width:100%;" id="diaCnt">
+				<ul class="rating"> 
+					<li oid="$oid" clv="1" ></li> 
+					<li oid="$oid" clv="2" ></li> 
+					<li oid="$oid" clv="3" ></li> 
+					<li oid="$oid" clv="4" ></li> 
+					<li oid="$oid" clv="5" ></li> 
+				</ul>
+			</div>
+			評論:
+			<input type="text" id="cmt" name="cmt" style="width:175px;">
+		</div>
+	</form>
+</textarea>
+
+<div class="rxmain">
+	<div style="width:100%;text-align:center;">
+		<span style="font-size:36pt;font-weight:bolder;">慢箋管理</span>
+	</div>
+	<form id="mapform" class="srcform" style="" action="/RXmain" method="post" >
+		<input type="hidden" value="" id="val" name="val">
+		<input type="hidden" value="" id="act" name="act">
+		<select name="rxuser" class="srcSel form-control tw-sel">
+			<option value="" class="defOpt">慢箋使用者</option>
+			{{foreach from=$rx_user item=rx}}
+				<option value="{{$rx[0]}}" {{if $rx[0] == $itemVal['rxuser']}}selected{{/if}}>{{$rx[1]}}</option>
+			{{/foreach}}
+		</select>
+		<select name="rxtype" class="srchtop srcSel form-control tw-sel">
+			<option value="" class="defOpt">慢箋狀態</option>
+			{{foreach from=$ORDER_TYPE key=otype item=ty}}
+				<option value="{{$otype}}" {{if $otype == $itemVal['rxtype']}}selected{{/if}}>{{$ty}}</option>
+			{{/foreach}}
+		</select>
+		<select name="rxtime" class="srchtop srcSel form-control tw-sel">
+			<option value="3" {{if $itemVal['rxtime'] == 3 }}selected{{/if}}>三個月內</option>
+			<option value="6" {{if $itemVal['rxtime'] == 6 }}selected{{/if}}>半年內</option>
+			<option value="12"{{if $itemVal['rxtime'] == 12}}selected{{/if}}>一年內</option>
+			<option value="24"{{if $itemVal['rxtime'] == 24}}selected{{/if}}>兩年內</option>
+		</select>
+		<input type="submit" class="srchtop btn btn-sm btn-primary" value="搜尋">
+		<a href="/RXupload" class="srchtop" style="float:right;position: absolute;right: 15px;">
+			<img src="resource/img/rx_add.png?v={{$ver}}" class="rxAdd" title="上傳慢箋">
+			<font class="addfont">新增慢箋</font>
+		</a>
+	
+		<div style="overflow-x:auto;width:100%;">
+			<table class="tablesorter" id="orderTable">
+				<thead>
+					<th>編號</th>
+					<th width="90px">狀態</th>
+					<th>指定藥局</th>
+					<th width="120px">上傳時間</th>
+					<th>慢箋使用者</th>
+					<th>就診醫院</th>
+					<th width="200px">操作</th>
+				</thead>
+				<tbody>
+					{{foreach from=$rx_order item=order}}
+					<tr>
+						<td>{{$order[0]}}</td>
+						<td {{if $order[1]==4 || ($order[1]==2 && time()>strtotime($order[11]))}}style="color:red"{{else if $order[1]==2}}style="color:green;"{{/if}}>
+							{{$ORDER_TYPE[$order[1]]}}
+							<br>
+							<a href="/Cmsg?rx={{$order[0]}}" title="雲端通"><img style="height:25px;" src="/resource/img/mtk.png"></a>
+						</td>
+						<td  title="{{$order[6]}}">
+							<a href="/AgentMap?ph={{$order.10}}"  class="greenfont 
+								{{if $order[1]==2 && time()>strtotime($order[11])}}
+									blind
+								{{/if}}
+							">{{$order[4]}}</a>
+						</td>
+						<td>{{$order[2]}}</td>
+						<td>{{$order[3]}}</td>
+						<td>{{$order[5]}}-<a style="color:blue;" href="/photo/rx_img/rx{{$order[0]}}.jpg" target="_blank">慢箋</a></td>
+						<td style="text-align: center;vertical-align: middle;">
+							{{if $order[1]==4 && $order[8]!="" && $order[8]!=null}}
+							<div style="color:red">
+								被取消原因:
+								</br>
+								{{$order[8]}}
+							</div>
+							{{/if}}
+							{{if $order[1]==2 && time()>strtotime($order[11])}}
+							<div style="color:red">
+								{{$order[11]}}
+								<br>
+								領藥期限已過
+								<br>
+								請直接連絡藥局
+							</div>
+							{{/if}}
+							{{if $order[1]==0}}
+								<input class="btn btn-xs btn-danger" type="button" onclick="btnAction('cls',{{$order[0]}})" value="取消慢箋">
+							{{/if}}
+							{{if $order[1]==3}}
+								<input class="btn btn-xs btn-info" type="button" onclick="cmt('{{$order[0]}}','{{$order[7]}}','{{$order[9]}}')" value="評論">
+							{{/if}}
+							
+						</td>
+					</tr>
+					{{/foreach}}
+				</tbody>
+			</table>
+		</div>
+	</form>
+	
+</div>

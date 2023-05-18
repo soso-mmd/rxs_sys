@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script type="text/javascript" src="/resource/js/jquery-1.11.3.min.js?v={{$ver}}"></script>
+		<script type="text/javascript" src="/resource/js/bootstrap.min.js?v={{$ver}}"></script>
+		<script type="text/javascript" src="/resource/js/main.js?v={{$ver}}"></script>
+		<link href="/resource/css/bootstrap.min.css?v={{$ver}}" rel="stylesheet" type="text/css">
+		<link href="/resource/css/main.css?v={{$ver}}" rel="stylesheet" type="text/css">
+		<script>
+			$(function(){
+				top.SetCwinHeight();
+				$(".rxImg").click(function(){
+					window.open($(this).attr("src"));
+				});
+			});
+			function btnClick(act,aid,enb,phname){
+				$("input[name=act]").val(act);
+				$("input[name=val]").val(aid);
+				$("input[name=enb]").val(enb);
+				if(enb==1){
+					if(confirm("確認關閉"+phname+'?'))
+						$("#mform").submit();
+				}else
+					$("#mform").submit();
+			}
+		</script>
+	</head>
+	<body>
+		<div style="width:100%;text-align:center;margin-bottom:30px;">
+			<span style="font-size:36pt;font-weight:bolder;">藥局列表</span>
+		</div>
+		<form id="mform" class="srcform" action="/z/hlist" method="post" >
+			<input type="hidden" name="act">
+			<input type="hidden" name="val">
+			<input type="hidden" name="enb">
+			狀態:
+			<select name="ihtype" class="srcSel form-control tw-sel" onchange="$('#mform').submit();">
+				<option value="1" {{if $ihtype=="1"}}selected{{/if}}>啟用</option>
+				<option value="2" {{if $ihtype=="2"}}selected{{/if}}>停用</option>
+				<option value="a" {{if $ihtype=="a"}}selected{{/if}}>全部</option>
+			</select>
+			<div class="mtable">
+			<table class="table table-sm table-dark">
+				<thead>
+					<tr>
+						<th scope="col">藥局名稱</th>
+						<th scope="col">登記字號</th><!-- 配許可執照-->
+						<th scope="col">負責藥師</th><!-- 配藥師執照-->
+						<th scope="col">藥局資訊</th><!-- 電話、地址-->
+						<th scope="col">藥局外觀</th>
+						<th scope="col">狀態</th>
+						<th scope="col">操作</th>
+					</tr>
+				</thead>
+				<tbody >
+				{{foreach from=$iph item=ph}}
+				<tr>
+					<td>{{$ph.pag003}}</td>
+					<td>
+						{{$ph.pag002}}
+						<br>
+						<img src="{{$imgUrl}}photo/ph_img/img{{$ph.pag001}}_license.jpg?{{$ver}}" class="rxImg">
+					</td>
+					<td>
+						{{$ph.pag011}}
+						<br>
+						<img src="{{$imgUrl}}photo/ph_img/img{{$ph.pag001}}_PHlicense.jpg?{{$ver}}" class="rxImg">
+					</td>
+					<td class="mtd">
+						<div style="float:left;text-align:right;">
+							申請時間&nbsp;:&nbsp;	
+							<br>最後登入&nbsp;:&nbsp;	
+							<br>電話&nbsp;:&nbsp;	
+							<br>地址&nbsp;:&nbsp;
+						</div>
+						<div style="float:left;text-align:left;">
+							{{$ph.pag009}}
+							<br>{{$ph.pag010}}
+							<br>{{$ph.pag014}}
+							<br>{{$ph.pag006}}{{$ph.pag007}}
+							<br>{{$ph.pag008}}
+						</div>
+					</td>
+					<td>
+						<img src="{{$imgUrl}}photo/ph_img/img{{$ph.pag001}}_photo.jpg?{{$ver}}" class="rxImg">
+					</td>
+					<td>
+						{{if $ph.pag005==1}}
+							<span style="color:lime;">啟用</span>
+						{{else if $ph.pag005==0}}
+							<span style="color:#9ac4f7;">新申請</span>
+						{{else}}
+							<span style="color:red;">停用</span>
+						{{/if}}
+					</td>
+					<td>
+						<input class="btn {{if $ph.pag005==1}}btn-danger{{else}}btn-success{{/if}}" type="button" onclick="btnClick('okt',{{$ph.pag001}},{{$ph.pag005}},'{{$ph.pag003}}');" value="{{if $ph.pag005==1}}停用{{else}}啟用{{/if}}">
+					</td>
+				</tr>
+				{{/foreach}}
+			  </tbody>
+			</table>
+			</div>
+		</form>
+	</body>
+</html>

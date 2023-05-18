@@ -1,0 +1,29 @@
+<script type="text/javascript">
+	switch({{$res}}){
+		case 1:
+			alert('註冊成功');
+			location.href="/URlogin";
+		break
+		case 2:
+			alert('輸入不完整，請重新輸入');
+			history.go(-1);
+		break;
+		case 3:
+			alert('e-mail已註冊過，請直接登入或點選忘記密碼');
+			location.href="/";
+		break;
+		case 6:
+			alert('驗證碼錯誤');
+			history.go(-1);
+		break;
+		case 7:
+			alert('line通知權杖錯誤，無法傳送通知，請重新設定');
+			history.go(-1);
+		break;
+		default:
+			alert('註冊失敗，請重新註冊');
+			//history.go(-1);
+		break;
+	}
+	
+</script>

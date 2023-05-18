@@ -1,0 +1,45 @@
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:65px;
+		width:65px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+</style>
+
+
+<div class="rxmain">
+	<div style="width:100%;">
+		<h1 style="font-size:36pt;font-weight:bolder;">慢箋使用者<h1>
+	</div>
+	<div style="width:100%;margin-bottom:40px;text-align:right;">
+		<a href="/RXregister">
+			<img src="resource/img/rx_add.png?v={{$ver}}" class="rxAdd" title="新增慢箋使用者">
+		</a>
+	</div>
+	
+	{{foreach from=$rx_user key=k item=rx}}
+	<a class="col-md-3" href="/RXuser?rx={{$rx[0]}}">
+		<div class="rxstr">
+			<img src="resource/img/{{$rx[2]}}.png?v={{$ver}}" style="width:60%;">
+			<br>
+			{{$rx[1]}}
+		</div>
+	</a>
+	{{/foreach}}
+	
+	
+</div>

@@ -1,0 +1,357 @@
+<script type="text/javascript" src="resource/js/jquery-form.js?v={{$ver}}"></script>
+<script type="text/javascript" src="resource/js/msg.js?v={{$ver}}"></script>
+
+<script type="text/javascript">
+	var rx='{{$rx}}';
+	var ph='{{$ph}}';
+	var ctype='{{$ctype}}';
+</script>
+<style>
+.clientList {
+	float: left;
+	width: 250px;
+	height: 650px;
+	padding: 5px;
+	padding-right: 5px;
+	background-color: #ddd;
+}
+
+.historyMsg {
+    height: 480px;
+    background-color: #d9edf7;
+    overflow: auto;
+    padding: 2px;
+	text-align: left;
+}
+#wrapper {
+	float: left;
+	width: 450px;
+	height: 650px;
+	padding: 5px;
+	margin: 0 auto;
+	background-color: #ddd;
+}
+#mclist{
+	display:none;
+	width:100%;
+	height:90px;
+	background-color:white;
+}
+@media (max-width: 767px){
+	#wrapper{
+		width:350px;
+	}
+	.clientList{
+		display:none;
+	}
+	#mclist{
+		display:block;
+	}
+	.historyMsg{
+		height:390px;
+	}
+}
+.listtop {
+	height: 50px;
+	width: 250px;
+	background: url(/resource/img/tab_05.gif);
+	background-size:100% 100%;
+	line-height: 50px;
+	font-size:16pt;
+	font-weight:bolder;
+}
+.chat_dv {
+	margin-left:auto;
+	margin-right:auto;
+	width:700px;
+	text-align:center;
+}
+#clist {
+	height: 590px;
+	width: 250px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	background-color: white;
+}
+.selflist {
+	background-color: rgb(152, 193, 234);
+}
+.flist {
+    cursor: pointer;
+    height: 65px;
+    line-height: 65px;
+	text-align:left;
+	font-size: larger;
+}
+.mflist {
+    cursor: pointer;
+    height: 100%;
+    font-size: 12pt;
+	width:80px;
+	padding:10px;
+}
+.flist:hover, .mflist:hover {
+    background-color: rgba(216, 245, 255, 1);
+}
+.mlineJpg {
+    height: 60px;
+    width: 60px;
+	border-radius: 60px;
+}
+.lineJpg {
+    height: 50px;
+    width: 50px;
+	border-radius: 50px;
+}
+.munread {
+	display: none;
+    color: white;
+    background-color: #f77e05;
+    height: 35px;
+    line-height: 35px;
+    width: 35px;
+    text-align: center;
+    border-radius: 99em;
+    font-size: 8pt;
+	position:relative;
+	top: -46px;
+    left: 48px;
+}
+.unread {
+    display: none;
+    color: white;
+    background-color: #f77e05;
+    float: right;
+    height: 35px;
+    line-height: 35px;
+    width: 35px;
+    text-align: center;
+    border-radius: 99em;
+    font-size: 8pt;
+    margin-top: 15px;
+	margin-right: 15px;
+}
+.msg_div {
+    width: 100%;
+    margin-bottom: 5px;
+    display: inline-block;
+	
+}
+.msg_time_f {
+    margin-left:50px;
+	width: 100px;
+    height: 30px;
+    line-height: 30px;
+	margin-left: 50px;
+    color: #9fa2a5;
+    font-size: 9pt;
+}
+.msg_time {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+	color: #9fa2a5;
+    font-size: 9pt;
+	padding-right:10px;
+}
+.msg_my {
+    background-color: rgb(228,228,228);
+    margin-right: 10px;
+	display:inline-block;
+}
+.msg_my, .msg_f {
+    width: 200px;
+    padding: 5px;
+    word-break: break-all;
+    border-radius: 10px;
+	font-size:16pt;
+}
+.fact {
+    font-size: 10pt;
+}
+.msg_f {
+    float: left;
+    background-color: rgb(255, 241, 199);
+}
+.controls {
+	padding-top: 10px;
+	height:100px;
+    background-color: white;
+}
+.messageInput {
+    border: 0px;
+    width: 100%;
+    display: inline;
+    padding: 0px;
+    word-break: break-all;
+    font-size: 18pt;
+    font-family: Microsoft JhengHei;
+    resize: none;
+	height:35px;
+	outline:none;
+}
+.sendImg {
+	cursor: pointer;
+    font-family: Microsoft JhengHei;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+	background-position: 50% 50%;
+    background-image: url(/resource/img/upicon.png?9);
+	background-repeat: no-repeat;
+    height: 35px;
+	display:block;
+}
+.sendImg:active{
+	position:relative;
+	top:1px;
+}
+.sendBtn {
+    font-family: Microsoft JhengHei;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(/resource/img/sendicon.png);
+    width: 35px;
+    height: 35px;
+    border: 5px #D0B86E solid;
+    background-color: #D0B86E;
+}
+.titJpg{
+	height: 40px;
+    width: 40px;
+    border-radius: 50px;
+}
+.chJpg{
+	height: 40px;
+    width: 40px;
+    border-radius: 50px;
+	float: left;
+	margin-right:10px;
+}
+.ord2{
+	width:200px;
+	height:60px;
+	display: flow-root;
+	cursor:pointer;
+	text-align:left;
+	
+}
+.ord{
+	width:250px;
+	height:60px;
+	margin-right:auto;
+	margin-left:auto;
+	text-align:left;
+	border-radius: 10px;
+    border: 1px #e0e4e9 solid;
+    box-shadow: 3px -2px 2px 0px #f1f1f0;
+	display: flow-root;
+	cursor:pointer;
+}
+.tkTitle{
+	background: url(/resource/img/tab_05.gif);
+    background-size: 100% 100%;
+    height: 50px;
+    line-height: 50px;
+    text-align: left;
+	padding-left:5px;
+	font-size:16pt;
+}
+.ordImg{
+	width:60px;
+	height:60px;
+	border-radius: 10px;
+	float:left;
+}
+.ordCls{
+	width: 25px;
+    height: 25px;
+    border-radius: 50px;
+    border: 3px #e0e4e9 solid;
+    position: relative;
+    bottom: 60px;
+    background-color: white;
+    left: 170px;
+	display: inline-block;
+    text-align: center;
+}
+.fpp{
+	width:4em;/*指定寬度*/
+	word-break:keep-all;/* 不換行 */
+	white-space:nowrap;/* 強制在同一行內顯示所有文字,直到文字結束或者遭遇 br 物件。不換行 */
+	overflow:hidden;/* 內容超出寬度時隱藏超出部分的內容 */
+	text-overflow:ellipsis;/* IE 專有屬性,當物件內文字溢位時顯示省略標記(...) ;需與overflow:hidden;一起使用。*/
+}
+.hpp{
+	width:12em;/*指定寬度*/
+	word-break:keep-all;/* 不換行 */
+	white-space:nowrap;/* 強制在同一行內顯示所有文字,直到文字結束或者遭遇 br 物件。不換行 */
+	overflow:hidden;/* 內容超出寬度時隱藏超出部分的內容 */
+	text-overflow:ellipsis;/* IE 專有屬性,當物件內文字溢位時顯示省略標記(...) ;需與overflow:hidden;一起使用。*/
+}
+.ordp{
+	padding-left:5px;
+	font-size:14pt;
+	width:6em;/*指定寬度*/
+	word-break:keep-all;/* 不換行 */
+	white-space:nowrap;/* 強制在同一行內顯示所有文字,直到文字結束或者遭遇 br 物件。不換行 */
+	overflow:hidden;/* 內容超出寬度時隱藏超出部分的內容 */
+	text-overflow:ellipsis;/* IE 專有屬性,當物件內文字溢位時顯示省略標記(...) ;需與overflow:hidden;一起使用。*/
+}
+.ordDv{
+	width:100%;
+	background-color: white;
+	padding-top: 10px;
+}
+.contentDiv{
+	height:640px;
+	width:100%;
+}
+</style>
+
+<textarea id="chat_content" style="display:none">
+	<div id="content_@act"  style="display:none" class="contentDiv">
+		<div class="tkTitle">
+			<img src="@src" class="titJpg">
+			<span>@tname</span>
+		</div>
+		<div id="historyMsg_@act" class="historyMsg"></div>
+		<div id="ord_@act" class="ordDv"></div>
+		<div class="controls">
+			<div style="text-align:left;color:#b1b0b5;">字數限制:<span class="strlen" id="strlen_@act"></span></div>
+			<table style="width: 100%;height: 35px">
+				<tr>
+					<td style="width: 50px;">
+						<label class="sendImg" for="img_@actfile" class="upBtn btn btn-info btn-lg" id="img_@actlab" title="傳送圖片"></label>
+						<form method="post" class="ajaxForm" id="ajaxForm_@act" style="display:none;">  
+							<canvas id="img_@actfile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+							<input id="img_@actfile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+							<input id="press_img_@actfile" name="img_@act" type="hidden">
+							<input name="pic" value="img_@act" type="hidden">
+						</form> 
+					</td>
+					<td style="padding-right: 10px;padding-left:10px;">
+						<string@textarea  class="messageInput" id="messageInput_@act" placeHolder="輸入給對方的訊息..."><string@/textarea>
+					</td>
+					<td style="width: 50px;">
+						<input class="sendBtn" id="sendBtn_@act" type="button" title="傳送訊息">
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</textarea>
+
+<div class="chat_dv">
+	<div class="clientList">
+		<div class="listtop">所有聯絡人</div>
+		<div id="clist"></div>
+	</div>
+	<div id="wrapper">
+		<div id="mclist"></div>
+	</div>
+</div>
+

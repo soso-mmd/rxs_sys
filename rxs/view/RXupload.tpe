@@ -1,0 +1,201 @@
+ 	<script src="resource/js/jquery.twzipcode.min.js?v={{$ver}}"></script>  
+ 	<script src="resource/js/select2.js?v={{$ver}}"></script>
+ 	<link href="/resource/css/select2.css?v={{$ver}}" rel="stylesheet" type="text/css">
+		
+	<style>
+		.regist_input{
+			border-style: solid;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			width:100%;
+			height: 35px;
+			font-size: 15pt;
+			line-height: 15px;
+			color: #21272a;
+			font-weight: bolder;
+			margin-top:15px;
+		}
+		.ph_addr{
+			width:33%;
+			margin-left:0px;
+			margin-top: 15px;
+			padding-left:0px;
+		}
+		.regist_form{
+			text-align:center;
+			max-width:500px;
+			margin-left:auto;
+			margin-right:auto;
+		}
+		.birStr{
+			color:#757575;
+			/*float:left;*/
+			height:35px;
+			line-height:35px;
+		}
+		.birSel{
+			color: #21272a;
+			font-weight: bolder;
+			font-size: 15pt;
+			line-height: 15px;
+			height: 34px;
+			/*float:left;*/
+			margin-top:0px;
+			padding-left:0px;
+			margin-left:30px;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			border-style: solid;
+		}
+		.upBtn{
+			width:100%;
+			float:left;
+			padding-bottom:1px;
+			padding-top:1px;
+			margin-top:15px;
+		}
+		.select2-container{
+			font-size:15pt;
+			height:35px;
+			line-height:35px;
+			font-weight:bolder;
+		}
+	</style>
+	<script type="text/javascript">
+		var phAgent = JSON.parse('{{$ph_agent}}');
+		{{if count($rx_user)==0}} 
+			alert("請先新增慢箋使用者");
+			location.href="/RXregister";
+		{{/if}}
+		$(function(){
+			$("#sel_hospital").select2({
+				placeholder: "請選擇醫院",
+				width: "resolve",
+				minimumInputLength:2,
+				ajax: {
+					url: "action/searchHP",
+					dataType: 'json',
+					delay: 850,
+					data: function (params) {
+						return {
+							search: params.term,
+						};
+					},
+					processResults: function (data) {
+						return {
+							results: data
+						};
+					},
+					cache: true
+				},
+				
+				//data:hpData,
+				language:  {
+					noResults: function() {
+						return '未找到匹配選項'
+					},
+					inputTooShort: function (args) {
+						var remainingChars = args.minimum - args.input.length;
+						var message = '請輸入' + remainingChars + '個或更多文字';
+						return message;
+					},
+					searching: function () {
+						return '搜尋中…';
+						} 
+				}
+			});
+			$("#upload_form").submit(function(e){
+				var items = {
+					'rx_user':'select',
+					'rx':'input',
+					'ph_agent':'select',
+					'sel_hospital':'select',
+				};
+				for(var i in items){
+					var itemVal =$(items[i]+"[name="+i+"]"); 
+					if(itemVal.val()==undefined || itemVal.val()=='' || itemVal.val()==0){
+						alert('資料有缺，請填寫完整');
+						if(i=="rx")
+							$("#rxlab").focus();
+						else
+							itemVal.focus();
+						return false;
+					}
+				}
+			});
+			$('#twzipcode').twzipcode({
+				'css':['ph_addr regist_input', 'ph_addr regist_input'],
+				'countyName':'ph_country',
+				'districtName':'ph_district',
+				'onCountySelect':getAgentSelect,
+				'onDistrictSelect':getAgentSelect,
+			});
+			$("input[name=zipcode]").hide();
+			getAgentSelect();
+			$("input[type=file]").change(function(){
+				$("#"+$(this).attr("id")+"_str").val($(this).val());
+			});
+		});
+		function getAgentSelect(){
+			var agent = {};
+			if($("select[name='ph_country']").val()){
+				if(phAgent[$("select[name='ph_country']").val()] && phAgent[$("select[name='ph_country']").val()][$("select[name='ph_district']").val()]){
+					agent[$("select[name='ph_country']").val()]={};
+					agent[$("select[name='ph_country']").val()][$("select[name='ph_district']").val()] = phAgent[$("select[name='ph_country']").val()][$("select[name='ph_district']").val()];
+				}
+			}else{
+				agent = phAgent;
+			}
+			var sHtml = [];
+			sHtml.push('<select id="ph_agent" name="ph_agent" class="regist_input" style="width:100%;padding-left:0px;">');
+			sHtml.push('<option value=0 style="color:#797775">藥局</option>');
+			for(var c in agent){
+				for(var d in agent[c]){
+					for(var i in agent[c][d]){
+						sHtml.push('<option class="regist_input" value="'+agent[c][d][i][0]+'">&nbsp;&nbsp;'+agent[c][d][i][1]+'</option>');
+					}
+				}
+			}
+			sHtml.push('</select>');
+			$("#ph_span").html(sHtml.join(''));
+		}
+	</script>
+	<div style="margin-bottom:70px;">
+		<h1 style=" font-size: 40px;letter-spacing: 3px;line-height: 100%;text-align: center;">上傳慢箋</h1>
+		<form  enctype="multipart/form-data" id="upload_form" method="post" autocomplete="true" class="regist_form" action="/RXorder">
+			<div style="margin-bottom: 15px; width:100%;">
+				<div style="width:100%;">
+					<select name="rx_user" class="regist_input" style="width:79%;">
+						<option value=0 style="color:#797775">慢箋使用者</option>
+						{{foreach from=$rx_user item=rx}}
+							<option class="regist_input" value="{{$rx[0]}}" {{if $rx[0]==$sel_rx}}selected{{/if}}>&nbsp;&nbsp;{{$rx[1]}}</option>
+						{{/foreach}}
+					</select>
+					<a href="/RXregister" class="btn btn-primary btn-lg" style="width:20%;padding: 3px;">新增</a>
+				
+				</div>
+				<div style="width:100%;">
+					<canvas id="rxfile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+					<label for="rxfile" class="upBtn btn btn-info btn-lg" id="rxlab">
+						<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+						慢箋(相片上傳)
+					</label>
+					<input id="rxfile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+					<input id="press_rxfile" name="rx" type="hidden">
+				</div>
+				<div id="twzipcode" style="width:100%;display: inline-table;margin-bottom:15px;">
+					<span id="ph_span" style="float:right;display:inline-block;width:34%;"></span>
+				</div>
+					
+				<select id="sel_hospital" name="sel_hospital" class="regist_input">
+					<option value=0 style="color:#797775">*請選擇就診醫院</option>
+				</select>
+			</div>
+			<div class="col-md-12 text-center">
+				<input type="submit" class="btn btn-default btn-lg" value="新增">
+				<br>
+				如有想去的藥局歡迎<a href="/introPH" target="_blank" style="color:blue;">推薦</a>給本站
+				
+			</div>
+		</form>
+	</div>

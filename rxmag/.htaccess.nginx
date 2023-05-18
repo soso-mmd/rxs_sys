@@ -1,0 +1,1 @@
+rewrite ^/z/([a-zA-Z\_]+)$ /_action/$1.php break;

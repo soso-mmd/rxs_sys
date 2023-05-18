@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteRule ^([a-zA-Z\_]+)$ index.php?page=$1 [L,QSA]
+RewriteRule ^md/([a-zA-Z]+)$ index.php?type=md&page=$1 [L,QSA]
+RewriteRule ^ur/([a-zA-Z]+)$ index.php?type=ur&page=$1 [L,QSA]
+

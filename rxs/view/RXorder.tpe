@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	switch({{$res}}){
+		case 1:
+			alert('新增成功');
+			location.href="/RXmain";
+		break
+		case 2:
+			alert('輸入不完整，請重新輸入');
+			history.go(-1);
+		break;
+		case 3:
+			alert('圖片上傳錯誤，請重新輸入');
+			history.go(-1);
+		break;
+		case 4:
+			alert('檔案格式僅限.jpeg .jpg .png .gif \n請重新輸入');
+			history.go(-1);
+		break;
+		default:
+			alert('新增失敗，請重新新增{{$res}}');
+			history.go(-1);
+		break;
+		
+	}
+	
+</script>

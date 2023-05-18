@@ -1,0 +1,158 @@
+ 	<script src="resource/js/jquery.twzipcode.min.js"></script>  
+	<style>
+		.regist_input{
+			padding-left: 8px;
+			border-style: solid;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			width:100%;
+			height: 35px;
+			font-size: 15pt;
+			line-height: 15px;
+			color: #21272a;
+			font-weight: bolder;
+			margin-top:15px;
+		}
+		.ph_addr{
+			width:35%;
+		}
+		.regist_form{
+			text-align:center;
+			max-width:500px;
+			margin-left:auto;
+			margin-right:auto;
+		}
+		.birStr{
+			color:#757575;
+			height:35px;
+			line-height:35px;
+		}
+		.birSel{
+			color: #21272a;
+			font-weight: bolder;
+			font-size: 15pt;
+			line-height: 15px;
+			height: 34px;
+			/*float:left;*/
+			margin-top:0px;
+			padding-left:0px;
+			margin-left:30px;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			border-style: solid;
+		}
+		.upBtn{
+			width:100%;
+			float:left;
+			padding-bottom:1px;
+			padding-top:1px;
+			margin-top:15px;
+		}
+	</style>
+	<script type="text/javascript">
+		$(function(){
+			/*$("#birth").datetimepicker({
+				minView: "month",
+				format: 'Y-m-d',
+				timepicker:false,
+			});*/
+			$('#twzipcode').twzipcode({
+				'css':['birSel ph_addr', 'birSel ph_addr'],
+				'countyName':'ph_country',
+				'districtName':'ph_district',
+			});
+			$("input[name=zipcode]").hide();
+			$("#register_form").submit(function(e){
+				var items = {
+					'ph_name'			:'input',
+					'ph_mail'			:'input',
+					'ph_num'			:'input',
+					'ph_phname'			:'input',
+					'ph_runday'			:'input',
+					'ph_runtime'		:'input',
+					'ph_phone'			:'input',
+					'ph_country'		:'select',
+					'ph_district'		:'select',
+					'ph_address'		:'input',
+					'ph_license'		:'input',
+					'ph_phlicense'		:'input',
+					'ph_introduction'	:'textarea',
+					'ph_photo'			:'input',
+					'pwd'				:'input'
+				};
+				for(var i in items){
+					var itemVal =$(items[i]+"[name="+i+"]"); 
+					if(itemVal.val()==undefined || itemVal.val()==''){
+						alert('資料有缺，請填寫完整');
+						if(i=="ph_license" || i=="ph_phlicense" || i=="ph_photo")
+							$("#"+i+"lab").focus();
+						else
+							itemVal.focus();
+						return false;
+					}
+				}
+				if($("#pwd_chk").val() != $("#pwd").val()){
+					alert('確認密碼不一致');
+					$("#pwd_chk").focus();
+					return false;
+				}
+			});
+		});
+	</script>
+	
+	<div style="margin-bottom:70px;">
+		<h1 style=" font-size: 40px;letter-spacing: 3px;line-height: 100%;text-align: center;">合作藥局註冊申請</h1>
+		<form  enctype="multipart/form-data" id="register_form" method="post" autocomplete="true" class="regist_form" action="/PHadd">
+			<div style="margin-bottom: 15px;">
+				<input name="ph_name" type="text" placeholder="藥局名稱" class="regist_input">
+				<input name="ph_mail" type="text" placeholder="e-mail" class="regist_input">
+				<input name="ph_num" type="text" placeholder="藥局登記字號" class="regist_input" >
+				<input id="pwd" name="pwd" type="password" placeholder="密碼" class="regist_input">
+				<input id="pwd_chk" type="password" placeholder="確認密碼" class="regist_input">
+				<div style="width:100%;">
+					<canvas id="ph_licensefile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+					<label for="ph_licensefile" class="upBtn btn btn-info btn-lg" id="ph_licenselab">
+						<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+						藥局許可執照(相片上傳)
+					</label>
+					<input id="ph_licensefile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+					<input id="press_ph_licensefile" name="ph_license" type="hidden">
+				</div>
+				<input name="ph_phname" type="text" placeholder="負責藥師姓名" class="regist_input" >
+				<div style="width:100%;">
+					<canvas id="ph_phlicensefile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+					<label for="ph_phlicensefile" class="upBtn btn btn-info btn-lg" id="ph_phlicenselab">
+						<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+						藥師執照(相片上傳)
+					</label>
+					<input id="ph_phlicensefile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+					<input id="press_ph_phlicensefile" name="ph_phlicense" type="hidden">
+				</div>
+				<input name="ph_runday" type="text" placeholder="營業日(ex:周一至周日)" class="regist_input">
+				<input name="ph_runtime" type="text" placeholder="營業時間(ex:09:00-22:00)" class="regist_input">
+				<input name="ph_phone" type="text" placeholder="電話" class="regist_input">
+				<div id="twzipcode"  class="regist_input">
+					<span class="birStr">藥局地址</span>
+					
+				</div>
+				<input name="ph_address" type="text" class="regist_input">
+				<div style="width:100%;">
+					<canvas id="ph_photofile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+					<label for="ph_photofile" class="upBtn btn btn-info btn-lg" id="ph_photolab">
+						<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+						藥局外觀(相片上傳)
+					</label>
+					<input id="ph_photofile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+					<input id="press_ph_photofile" name="ph_photo" type="hidden">
+				</div>
+				<textarea name="ph_introduction" type="text" placeholder="藥局簡介" class="regist_input" style="height: 100px;border-width: 1px;"></textarea>
+				
+				<div style="width:100%;">
+					<input id="cap_code" name="cap_code" type="text" placeholder="驗證碼" class="regist_input" style="width:70%;float:left;">
+					<img class="capimg" onClick="javascript:$(this).attr('src',$(this).attr('src')+'?'+Math.random());" src="/captcha/cap.php">  	
+				</div>
+				
+			</div>
+			<input type="submit" class="btn btn-default btn-lg" value="新增">
+		</form>
+	</div>

@@ -1,0 +1,108 @@
+<link href="/resource/css/tablesaw.stackonly.css?v={{$ver}}" rel="stylesheet" type="text/css"/>
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:65px;
+		width:65px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+	.table th{
+		text-align:right;
+		border-top:0px;
+		font-size: 15pt;
+	}
+	.form-control{
+		font-size: 13pt;
+		max-width:300px;
+	}
+	
+</style>
+<script>
+	$(function(){
+		if('{{$msg}}')
+			alert('{{$msg}}');
+			
+		$("#register_form").submit(function(e){
+			var items = {
+				'name'			:'input',
+				'sid'			:'input',
+				'gender'		:'select',
+				'birth'			:'input',
+				'phone'			:'input',
+			};
+			for(var i in items){
+				var itemVal =$(items[i]+"[name="+i+"]"); 
+				if(itemVal.val()==undefined || itemVal.val()==''){
+					alert('資料請勿空白');
+					itemVal.focus();
+					return false;
+				}
+			}
+		});
+	});
+</script>
+
+<div class="rxmain">
+	<div style="width:100%;">
+		<h1 style="font-size:36pt;font-weight:bolder;">{{$rx_user[1]}}<h1>
+	</div>
+	<form id="register_form" method="post" autocomplete="false" action="/RXuser?rx={{$rx_user[0]}}">
+		<input type="hidden" value="s" name="act">
+		<div class="table-responsive">
+		<table class="table tablesaw tablesaw-stack" data-tablesaw-mode="stack" style="max-width: 900px;margin-left: auto;margin-right: auto;"><tbody>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">姓名</th>
+				<td>
+					<input class="form-control" type="text" name="name" value="{{$rx_user[1]}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">身分證號碼</th>
+				<td>
+					<input class="form-control" type="text" name="sid" value="{{$rx_user[2]}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">性別</th>
+				<td>
+					<select class="form-control" name="gender">
+						<option value="man" {{if $rx_user[3]=="man"}}selected{{/if}}>男</option>
+						<option value="woman" {{if $rx_user[3]=="woman"}}selected{{/if}}>女</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">生日</th>
+				<td>
+					<input class="form-control" type="text" name="birth" value="{{$rx_user[4]}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">手機</th>
+				<td>
+					<input class="form-control" type="text" name="phone" value="{{$rx_user[5]}}">
+				</td>
+			</tr>
+			
+		</tbody></table>
+		</div>
+		<div class="col-md-12 text-center">
+            <a href="/RXmag" class="btn btn-default btn-lg">返回</a>
+            <input type="submit" name="gCustomerDetailsSubmit" class="btn btn-default btn-lg" value="完成更新">
+         </div>
+	</form>
+	
+</div>

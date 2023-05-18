@@ -1,0 +1,36 @@
+<style>
+	.rating{
+		margin-bottom:0px;
+		padding:0px;
+		width:175px;
+		display:flow-root;
+	}
+	.rating li{
+		float:left;
+		width:25px;
+		height:25px;
+	}
+</style>
+
+<div style="width:100%;padding:10px;">
+	{{foreach from=$cmt item=c}}
+	<div style="min-height:150px;border-bottom: 1px solid rgba(0,0,0,.09);">
+		<div style="min-height:35px;line-height:35px;font-size:12pt;">
+			<img src="/resource/img/acc.jpg?v=20190916" style="width:35px;border-radius: 50%;">
+			{{$c[0]|mb_substr:0:1:'utf-8'}}**
+			<span style="color:#8e8d8d;float:right;">{{$c[3]}}</span>
+		</div>
+		<div style="padding-left:35px;">
+			<ul class="rating"> 
+				<li style="background:url(/resource/img/{{if $c[1]<1}}n{{/if}}star.png?{{$ver}});" ></li> 
+				<li style="background:url(/resource/img/{{if $c[1]<2}}n{{/if}}star.png?{{$ver}});" ></li> 
+				<li style="background:url(/resource/img/{{if $c[1]<3}}n{{/if}}star.png?{{$ver}});" ></li> 
+				<li style="background:url(/resource/img/{{if $c[1]<4}}n{{/if}}star.png?{{$ver}});" ></li> 
+				<li style="background:url(/resource/img/{{if $c[1]<5}}n{{/if}}star.png?{{$ver}});" ></li> 
+			</ul>
+			<div style="font-size:14pt;width:100%;word-wrap:break-word;word-break:break-all;">{$c[2]}</div>	
+		</div>
+	</div>
+	{{/foreach}}
+</div>
+

@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteRule ^z/([a-zA-Z\_]+)$ _action/$1.php [L,QSA]
+

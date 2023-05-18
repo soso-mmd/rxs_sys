@@ -1,0 +1,171 @@
+<link href="/resource/css/tablesaw.stackonly.css?v={{$ver}}" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resource/js/artdialog/jquery.artDialog.js?skin=blue"></script>
+<script type="text/javascript" src="resource/js/artdialog/plugins/iframeTools.js"></script>
+
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:65px;
+		width:65px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+	.table th{
+		text-align:right;
+		border-top:0px;
+		font-size: 15pt;
+	}
+	.form-control{
+		font-size: 13pt;
+		max-width:300px;
+	}
+	
+</style>
+<script>
+	$(function(){
+		if('{{$msg}}')
+			alert('{{$msg}}');
+			
+		$("#register_form").submit(function(){
+			var items = {
+				'name'			:'input',
+				'phone'			:'input',
+			};
+			for(var i in items){
+				var itemVal =$(items[i]+"[name="+i+"]"); 
+				if(itemVal.val()==undefined || itemVal.val()==''){
+					alert('資料請勿空白');
+					itemVal.focus();
+					return false;
+				}
+			}
+			if($("#pwd_chk").val() != $("#pwd").val()){
+				alert('確認密碼不一致');
+				$("#pwd_chk").focus();
+				return false;
+			}
+			$("#lineCode").attr("disabled",false);
+		});
+	});
+	function lineSet(){
+		var URL = 'https://notify-bot.line.me/oauth/authorize?';
+		URL += 'response_type=code';
+		URL += '&client_id={{$ln_id}}';
+		URL += '&redirect_uri='+location.href;
+		URL += '&scope=notify';
+		URL += '&state=NO_STATE';
+		URL += '&response_mode=form_post';
+		window.location.href = URL;
+	}
+	function sendTest(){
+		send('/URntest',{},function(da){
+			if(da['rs']){
+				var cnt={};
+				switch(da['rs']){
+					case 1:
+						cnt = function(){
+							$("#msg").html("測試通知發送成功!<br>請查看line是否有收到測試通知");
+						};
+					break;
+					default:
+						cnt = function(){
+							$("#msg").html('傳送通知失敗!<br>可至<a href="https://notify-bot.line.me/zh_TW/" target="_blank" style="color:blue;"><u>line notify</u></a>個人頁面<br>解除\'慢箋雲端\'服務，重新設定');
+						};
+					break; 
+				}
+				var dialog=art.dialog({
+					id: 'artmsg',
+					title:'測試結果',
+					padding: 0,
+					content: $("#msgTxt").text(),
+					okVal:'確認',
+					ok:true,
+					lock:true,
+					init:cnt,
+				});
+				dialog.show();
+			}else{
+				alert('系統錯誤');
+			}
+		});
+	}
+</script>
+<textarea style="display:none;" id="msgTxt">
+	<div style="width:300px;height:80px;padding:20px;">
+		<div style="width:100%;" id="msg"></div>
+		<br>
+		<div>
+			*請確認已將<a href="https://notify-bot.line.me/zh_TW/" target="_blank" style="color:blue;"><u>line notify</u></a>官方帳號加入好友
+		</div>
+	</div>
+</textarea>
+<div class="rxmain">
+	<div style="width:100%;">
+		<h1 style="font-size:36pt;font-weight:bolder;">會員資料更新<h1>
+	</div>
+	<form id="register_form" method="post" autocomplete="false" action="/URinfo">
+		<input type="hidden" value="s" name="act">
+		<div class="table-responsive">
+		<table class="table tablesaw tablesaw-stack" data-tablesaw-mode="stack" style="max-width: 900px;margin-left: auto;margin-right: auto;"><tbody>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">姓名</th>
+				<td>
+					<input class="form-control" type="text" name="name" value="{{$da[0]}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">密碼</th>
+				<td>
+					<input class="form-control" type="password" name="pwd" value="">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">確認密碼</th>
+				<td>
+					<input class="form-control" type="password" name="pwd_chk" value="" >
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">手機</th>
+				<td>
+					<input class="form-control" type="tel" name="phone" value="{{$da[1]}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">line通知</th>
+				<td style="display:flow-root;">
+					{{if $lineChk==true}}
+						<span style="font-size:15pt;color:green;">
+							&#x2714;正常
+							<input style="padding:0px 2px 0px 2px;" type="button" value="測試通知" class="btn btn-success" onclick="sendTest()">
+							
+						</span>
+					{{else}}
+						<input placeholder="請設定line通知" class="form-control" type="text" id="lineCode" name="lineCode" style="float:left;margin-right:5px;display:none;" value="{{$code}}" disabled="disabled">
+						<input type="button" class="btn btn-success" style="height: 35px;font-size: 15pt;float:left;" value="設定line通知" onclick="lineSet();">
+					{{/if}}
+				</td>
+			</tr>
+			
+		</tbody></table>
+		</div>
+		<div class="col-md-12 text-center">
+            <a href="/URmain" class="btn btn-default btn-lg">返回</a>
+            <input type="submit" name="gCustomerDetailsSubmit" class="btn btn-default btn-lg" value="完成更新">
+            <br>
+            <font color="blue">*</font>密碼若不須改動，則不用填寫欄位<br>
+        </div>
+	</form>
+</div>

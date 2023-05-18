@@ -1,0 +1,236 @@
+<script src="resource/js/jquery.twzipcode.min.js"></script>  
+<link href="/resource/css/tablesaw.stackonly.css?v={{$ver}}" rel="stylesheet" type="text/css"/>
+<style>
+	.rxItem{
+		float:left;
+		
+	}
+	.rxAdd{
+		height:65px;
+		width:65px;
+	}
+	.rxmain{
+		width:100%;
+		text-align:center;
+	}
+	.rxstr{
+		width:100%;
+		text-align:center;
+		font-size:6rem;
+		font-weight:bolder;
+		margin-bottom:30px;
+	}
+	.table th{
+		text-align:right;
+		border-top:0px;
+		font-size: 15pt;
+	}
+	.cwid{
+		width:auto;
+	}
+	.form-control{
+		font-size: 13pt;
+		max-width:300px;
+		float:left;
+	}
+	.pimg{
+		width:300px;
+		cursor:pointer;
+	}
+	.upBtn{
+		margin-top: 0px;
+		padding: 1px 16px;
+		width:300px;
+	}
+</style>
+<script>
+	$(function(){
+		$('#twzipcode').twzipcode({
+			'css':['form-control cwid', 'form-control cwid'],
+			'countyName':'ph_country',
+			'districtName':'ph_district',
+			'countySel'   : '{{$pda["pcity"]}}',
+			'districtSel' : '{{$pda["pdist"]}}'
+		});
+		$("input[name=zipcode]").hide();
+	
+	
+		if('{{$msg}}')
+			alert('{{$msg}}');
+			
+		$(".pimg").click(function(){
+			window.open($(this).attr("src"));
+		});
+		$("input[type=file]").change(function(){
+			$("#"+$(this).attr("id")+"_str").val($(this).val());
+		});
+		$("input[id$='_str']").change(function(){
+			var idAry = $(this).attr('id').split("_");
+			$(this).val('');
+			$("#"+idAry[0]+"_"+idAry[1]).val('');
+		});
+		$("#register_form").submit(function(e){
+			var items = {
+				'ph_name'			:'input',
+				'ph_mail'			:'input',
+				'ph_num'			:'input',
+				'ph_phname'			:'input',
+				'ph_runday'			:'input',
+				'ph_runtime'		:'input',
+				'ph_phone'			:'input',
+				'ph_country'		:'select',
+				'ph_district'		:'select',
+				'ph_address'		:'input',
+				'ph_introduction'	:'textarea',
+			};
+			for(var i in items){
+				var itemVal =$(items[i]+"[name="+i+"]"); 
+				if(itemVal.val()==undefined || itemVal.val()==''){
+					alert('資料有缺，請填寫完整');
+					itemVal.focus();
+					return false;
+				}
+			}
+			if($("#pwd_chk").val() != $("#pwd").val()){
+				alert('確認密碼不一致');
+				$("#pwd_chk").focus();
+				return false;
+			}
+		});
+	});
+</script>
+
+<div class="rxmain">
+	<div style="width:100%;">
+		<h1 style="font-size:36pt;font-weight:bolder;">藥局資料更新<h1>
+	</div>
+	<form enctype="multipart/form-data" id="register_form" method="post" autocomplete="true" action="/PHinfo">
+		<input type="hidden" value="s" name="act">
+		<div class="table-responsive">
+		<table class="ptab table tablesaw tablesaw-stack" data-tablesaw-mode="stack" style="max-width: 900px;margin-left: auto;margin-right: auto;"><tbody>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局名稱</th>
+				<td>
+					<input class="form-control" type="text" name="ph_name" value="{{$pda['pname']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局登記字號</th>
+				<td>
+					<input class="form-control" type="text" name="ph_num" value="{{$pda['pac']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">e-mail</th>
+				<td>
+					<input class="form-control" type="text" name="ph_mail" value="{{$pda['mail']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">密碼</th>
+				<td>
+					<input class="form-control" type="password" id="pwd" name="pwd" value="">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">確認密碼</th>
+				<td>
+					<input class="form-control" type="password" id="pwd_chk" name="pwd_chk" value="" >
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局電話</th>
+				<td>
+					<input class="form-control" type="phone" name="ph_phone" value="{{$pda['phone']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">負責藥師</th>
+				<td>
+					<input class="form-control" type="text" name="ph_phname" value="{{$pda['pher']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">營業日</th>
+				<td>
+					<input class="form-control" type="text" name="ph_runday" value="{{$pda['rday']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">營業時間</th>
+				<td>
+					<input class="form-control" type="text" name="ph_runtime" value="{{$pda['rtime']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局地址</th>
+				<td>
+					<div id="twzipcode" style="float:left;"></div>
+					<input class="form-control" type="text" name="ph_address" value="{{$pda['paddr']}}">
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局許可執照</th>
+				<td>
+					<img class="pimg" src="/photo/ph_img/img{{$pda['pid']}}_license.jpg?{{time()}}">
+					<div style="margin-top:5px;">
+						<canvas id="ph_licensefile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+						<br>
+						<label for="ph_licensefile" class="upBtn btn btn-info btn-lg" id="ph_licenselab">
+							<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+							更改
+						</label>
+						<input id="ph_licensefile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+						<input id="press_ph_licensefile" name="ph_license" type="hidden">
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥師執照</th>
+				<td>
+					<img class="pimg" src="/photo/ph_img/img{{$pda['pid']}}_PHlicense.jpg?{{time()}}">
+					<div style="margin-top:5px;">
+						<canvas id="ph_phlicensefile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+						<br>
+						<label for="ph_phlicensefile" class="upBtn btn btn-info btn-lg" id="ph_phlicenselab">
+							<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+							更改
+						</label>
+						<input id="ph_phlicensefile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+						<input id="press_ph_phlicensefile" name="ph_phlicense" type="hidden">
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局外觀</th>
+				<td>
+					<img class="pimg" src="/photo/ph_img/img{{$pda['pid']}}_photo.jpg?{{time()}}">
+					<div style="margin-top:5px;">
+						<canvas id="ph_photofile_cv" style="position:fixed;top:100%;left:100%;">瀏覽器不支援圖片壓縮，請選擇2MB以下的圖</canvas>
+						<br>
+						<label for="ph_photofile" class="upBtn btn btn-info btn-lg" id="ph_photolab">
+							<img src="/resource/img/upload.png?v={{$ver}}" style="height:30px;"> 
+							更改
+						</label>
+						<input id="ph_photofile" type="file" placeholder="" style="position:fixed;top:100%;left:100%;" onchange="readFile(this);">
+						<input id="press_ph_photofile" name="ph_photo" type="hidden">
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th style="width: 140px;" class="backend-data-title text-right">藥局簡介</th>
+				<td>
+					<textarea class="form-control" name="ph_introduction" style="height: 100px;">{{$pda['intro']}}</textarea>
+				</td>
+			</tr>
+			
+		</tbody></table>
+		</div>
+		<div class="col-md-12 text-center">
+            <a href="/PHmain" class="btn btn-default btn-lg">返回</a>
+            <input type="submit" class="btn btn-default btn-lg" value="完成更新">
+            <br>
+            <font color="blue">*</font>若不須改動密碼，則不用填寫密碼欄位<br>
+        </div>
+	</form>
+</div>

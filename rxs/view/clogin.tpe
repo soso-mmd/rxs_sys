@@ -1,0 +1,10 @@
+<script type="text/javascript">
+	if({{$res}}==1){
+		alert('登入成功');
+		location.href="/{{$dpag}}";
+	}else{
+		alert('登入失敗');
+		history.go(-1);
+	}
+	
+</script>

@@ -1,0 +1,487 @@
+<!DOCTYPE HTML>
+<html>
+<head>   
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>慢箋雲端</title>
+	<link rel="shortcut icon" href="/resource/img/favicon.ico?v={{$ver}}" type="image/x-icon">
+	<link rel="icon" href="/resource/img/favicon.ico?v={{$ver}}" type="image/x-icon" />
+	<script type="text/javascript"> 
+		var imgPress = '{{$imgPress}}';
+	</script>
+	<!--
+	<meta name="description" content="鮮乳坊希望能作為消費者和酪農的橋樑，協助小農成立自有品牌，提供成分無調整、高品質的鮮乳。我們可以用消費的力量給予他們所需的支持，藉此改變乳業生態。"><!--不超過150的字符
+	<meta name="keywords" content="鮮乳, 鮮奶, 小農">
+
+	<meta property="og:site_name" content="鮮乳坊">
+	<meta property="og:url" content="https://www.ilovemilk.com.tw/">
+	<meta property="og:title" content="慢箋雲端">
+	<meta property="og:description" content="鮮乳坊希望能作為消費者和酪農的橋樑，協助小農成立自有品牌，提供成分無調整、高品質的鮮乳。我們可以用消費的力量給予他們所需的支持，藉此改變乳業生態。">
+	<meta property="og:image" content="http://ilovemilk.com.tw/images/ilovemilk_logo.png">
+	
+	<script type="text/javascript" src="/resource/js/bootstrap-datepicker.min.js"></script>
+	<link href="/resource/css/bootstrap-datepicker3.standalone.min.css" rel="stylesheet" type="text/css">
+	
+	-->
+	 
+	<script type="text/javascript" src="/resource/js/jquery-1.11.3.min.js?v={{$ver}}"></script>
+	<script type="text/javascript" src="/resource/js/bootstrap.min.js?v={{$ver}}"></script>
+	<script type="text/javascript" src="/resource/js/misc/main.js?v={{$ver}}"></script>
+	
+	<link href="/resource/css/bootstrap.min.css?v={{$ver}}" rel="stylesheet" type="text/css">
+	<link href="/resource/css/misc/main.css?v={{$ver}}" rel="stylesheet" type="text/css">
+	<link href="/resource/css/misc/font-awesome.min.css?v={{$ver}}" rel="stylesheet" type="text/css">
+	
+	<style type="text/css">
+        /* define bootstrap 5 columns */
+        .col-xs-1-5,
+        .col-sm-1-5,
+        .col-md-1-5,
+        .col-lg-1-5 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        .col-xs-1-5 {
+            width: 33%;
+            float: left;
+        }
+		.acc_img{
+			height: 30px;
+			width: 30px;
+			border-radius: 50%;
+			display: inline-block;
+			vertical-align: middle;
+		}
+		@media (min-width: 768px) {
+			.col-sm-1-5 {
+                width: 33%;
+                float: left;
+            }
+			
+			.acc_img{
+				height: 25px;
+				width: 25px;
+			}
+        }
+        @media (min-width: 992px) {
+            .col-md-1-5 {
+                width: 33%;
+                float: left;
+            }
+		}
+		@media (min-width: 1200px) {
+            .col-lg-1-5 {
+                width: 33%;
+                float: left;
+            }
+        }
+		.phdiv{
+			margin-top:20px;
+		}
+		a[href^="http://getbutton.io"]{
+			display:none;
+		}
+		.ntc{
+			display: none;
+			width: 20px;
+			background-color:red;
+			color:white;
+			border-radius:10px;
+			text-align: center;
+			height:20px;
+			line-height: 20px;
+			font-size:x-small;
+		}
+		
+		.itemBtn{
+			background-color:rgba(114, 114, 114, 1);
+			cursor:pointer !important;
+			transition:color 0.4s ease 0s;  
+			color:#FFFFFF;
+			white-space:nowrap;
+			font-size: 15pt;
+			padding: 5px;
+			box-shadow:2.83px 2.83px 4px 1px rgba(0,0,0,0.3);
+		}
+		.itemBtn:active{
+			position:relative;
+			top:1px;
+		}
+		.itemBtn:hover{
+			background-color:rgba(204,204,204,1);
+		}
+</style>
+	<script>
+		var ctype = '{{$ctype}}';
+		var shiny=0;
+		var ntcNum = 0;
+		var chtn=0;
+		$(function(){
+			$("span[name='ntcn']").hide();
+			if(ctype){
+				chkOrder();
+				setInterval(titShiny,1000);
+			}
+			//line fb 套件
+			var options = {
+				{{foreach from=$msgAry key=k item=i}}
+					{{$k}}:"{{$i}}",
+				{{/foreach}}
+				call_to_action: "聯絡我們", // Call to action
+				button_color: "#129BF4", // Color of button
+				position: "right", // Position may be 'right' or 'left'
+				order: "line,facebook", // Order of buttons
+			};
+			var proto = document.location.protocol, host = "getbutton.io", url = proto + "//static." + host;
+			var s = document.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = url + '/widget-send-button/js/init.js';
+			s.onload = function () { WhWidgetSendButton.init(host, proto, options); };
+			var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(s, x);
+		
+			
+			
+		});
+		var titShiny = function(){
+			var titStr = '慢箋雲端';
+			var n = chtn+ntcNum;
+			if(shiny==0){
+				shiny=1;
+				if(n>0)
+					titStr=titStr+'【'+n+'】';
+			}else{
+				shiny=0;
+				if(n>0)
+					titStr=titStr+'【 】';
+			}
+			$("title").html(titStr);
+		};
+		function chkOrder(){
+			if('{{$page}}'!='Cmsg'){
+				var da={};
+				da['ac'] = 2;
+				send('action/chatAjax',da,function(da){
+					if(da["rs"] && Number(da["rs"])>0){
+						$("span[name='chtn']").html(da["rs"]);
+						$("span[name='chtn']").css('display',"inline-block");
+						chtn = Number(da["rs"]);
+					}else{
+						$("span[name='chtn']").hide();
+					}
+				});
+			}
+			var oda={};
+			oda["type"] = ctype;
+			send('action/chkOrder',oda,function(da){
+				if(da["rs"] && Number(da["rs"])>0){
+					ntcNum = Number(da["rs"]);
+					$("span[name='ordn']").html(ntcNum);
+					$("span[name='ordn']").css('display',"inline-block");
+				}else{
+					$("span[name='ordn']").hide();
+				}
+				if(chtn+ntcNum >0){
+					$("span[name='ntcn']").html(chtn+ntcNum);
+					$("span[name='ntcn']").css('display',"inline-block");
+				}else{
+					$("span[name='ntcn']").hide();
+				}
+			});
+			
+			setTimeout(chkOrder,1000*20);
+		}
+	</script>
+</head>
+
+<body style="font-family: 微軟正黑體，Meiryo, Meiryo UI, Microsoft JhengHei UI, Microsoft JhengHei, sans-serif;">
+	<!-- 上方滑動導覽列
+	================================================== -->
+	<div class="container-fluid nava-div" style="top: -100px; display: block; opacity: 1;">
+		<div class="container center-block">
+			<div id="top-nav" class="row">
+				<div class="pull-left col-md-1 windth13p text-center">
+					<a href="/">
+						<img src="/resource/img/logo.jpg?v={{$ver}}" class="hidden-sm" alt="" style="height:80px;">
+						<!--img src="/resource/img/logo_m.png" class="visible-sm" alt="" style="height:80px;"-->
+					</a>
+				</div>
+				<div class="pull-right">
+					<!--認識我們-->
+					<div class="col-md-1 windth85px text-center nava-vi">
+						<a href="/">
+							<img src="/resource/img/top_about.png?v={{$ver}}" alt="">
+							<p>認識慢箋雲端</p>
+						</a>
+					</div>
+					
+					<!--慢箋上傳-->
+					<div class="col-md-1 windth85px text-center nava-vi">
+						<a href="/RXmain">
+							<img src="/resource/img/top_rx.png?v={{$ver}}" alt="">
+							<p>慢箋上傳</p>
+						</a>
+					</div>
+
+									
+					<!--尋找藥局-->
+					<div class="col-md-1 windth85px text-center nava-vi">
+						<a href="/AgentMap">
+							<img src="/resource/img/top_local.png?v={{$ver}}" alt="">
+							<p>尋找藥局</p>
+						</a>
+					</div>
+					
+					<!--Q&A-->
+					<div class="col-md-1 windth85px text-center nava-vi">
+						<a href="/fqa">
+							<img src="/resource/img/top_qa.png?v={{$ver}}" alt="">
+							<p>常見問題FAQ</p>
+						</a>
+					</div>
+					<!--合作藥局專區-->
+					<div class="col-md-1 windth85px text-center nava-vi">
+						<a href="/PHmain">
+							<img src="/resource/img/top_par.png?v={{$ver}}" alt="">
+							<p>合作藥局專區</p>
+						</a>
+					</div>
+
+					<div class="pull-left text-center topnav-div">
+						<!--分隔線-->
+					</div>
+					{{if $pAgent}}
+						<div class="col-md-1 windth85px text-center nava-vi phdiv">
+							<a href="/PHmain" style="font-size: 12pt;font-weight: bolder;">
+								{{$pAgent["pname"]}}
+								<span class="ntc" name="ntcn"></span>
+							</a>
+						</div>
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/Cmsg">
+								<img style="height:55px;" src="/resource/img/mtk.png?v={{$ver}}" alt="雲端通"  class="chtimg">
+								<p>
+									雲端通<span class="ntc" name="chtn"></span>
+								</p>
+								
+							</a>
+						</div>
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/URlogout">
+								<img src="/resource/img/logout.png?v={{$ver}}" alt="">
+								<p>登出</p>
+							</a>
+						</div>
+					{{elseif $ud}}
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/URmain">
+								<img src="/resource/img/acc.jpg?v={{$ver}}" alt="" style="wdith:55px;height:55px;">
+								<p>
+									{{$ud["name"]}}
+									<span class="ntc" name="ntcn"></span>
+								</p>
+								
+							</a>
+						</div>
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/Cmsg">
+								<img style="height:55px;" src="/resource/img/mtk.png?v={{$ver}}" alt="雲端通" class="chtimg">
+								<p>
+									雲端通<span class="ntc" name="chtn"></span>
+								</p>
+								
+							</a>
+						</div>
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/URlogout">
+								<img src="/resource/img/logout.png?v={{$ver}}" alt="">
+								<p>登出</p>
+							</a>
+						</div>
+					{{else}}
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/URlogin">
+								<img src="/resource/img/top_member.png?v={{$ver}}" alt="">
+								<p>登入</p>
+							</a>
+						</div>
+						<div class="col-md-1 windth85px text-center nava-vi">
+							<a href="/URregist">
+								<img src="/resource/img/top_member.png?v={{$ver}}" alt="">
+								<p>註冊</p>
+							</a>
+						</div>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav class="navbar navbar-default visible-xs visible-sm" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">
+						Toggle navigation
+					</span>
+					<span class="icon-bar">
+					</span>
+					<span class="icon-bar">
+					</span>
+					<span class="icon-bar">
+					</span>
+					<span class="ntc" name="ntcn" style="position: absolute;bottom: 0px;"></span>
+				</button>
+				<a class="navbar-brand" href="/">
+					<img alt="Brand" src="/resource/img/top_logo.png?v={{$ver}}" style="height:40px;">
+				</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
+				<ul class="nav navbar-nav">
+					<li><a href="/">認識慢箋雲端</a></li>
+					<li><a href="/RXmain">慢箋上傳</a></li>
+					<li><a href="/AgentMap">尋找藥局</a></li>
+					<li><a href="/fqa">常見問題FAQ</a></li>
+					<li><a href="/PHmain">合作藥局專區</a></li>
+					{{if $pAgent}}
+						<li><a href="/PHmain">
+								{{$pAgent["pname"]}}
+								<span class="ntc" name="ntcn" ></span>
+							</a>
+						</li>
+						<li><a href="/Cmsg">
+							<img src="/resource/img/mtk.png?v={{$ver}}" alt="" class="acc_img chtimg">
+							<span class="msgtit">雲端通</span>
+							<span class="ntc" name="chtn"></span>
+						</a></li>
+						<li><a href="/URlogout">登出</a></li>
+					{{elseif $ud}}
+						<li>
+							<a href="/URmain">
+								<img src="/resource/img/acc.jpg?v={{$ver}}" alt="" class="acc_img">
+								{{$ud["name"]}}
+								<span class="ntc" name="ntcn" ></span>
+							</a>
+						</li>
+						<li><a href="/Cmsg">
+								<img src="/resource/img/mtk.png?v={{$ver}}" alt="" class="acc_img chtimg">
+								<span class="msgtit">雲端通</span>
+								<span class="ntc" name="chtn"></span>
+							</a>
+						</li>
+						<li><a href="/URlogout">登出</a></li>
+					{{else}}
+						<li><a href="/URlogin">登入</a></li>
+						<li><a href="/URregist">註冊</a></li>
+					{{/if}}
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container rep_local">
+		<!-- Header -->
+		<div class="row" id="header">
+			<div class="col-md-4 visible-lg visible-md">
+				<a href="/" class="logo">
+					<img src="/resource/img/logo.jpg?v={{$ver}}" alt="慢箋雲端">
+				</a>
+			</div>
+			<div class="col-md-8 text-right">
+				<ul class="links visible-md visible-lg" style="font-size:18pt;font-weight: bolder;height: 40px;line-height: 40px;">
+					{{if $pAgent}}
+						<li class="link-accout">
+							<a href="/PHmain">
+								{{$pAgent["pname"]}}<span class="ntc" name="ntcn" ></span>
+							</a>
+						</li>
+						<li class="link-accout">
+							<a href="/Cmsg" title="雲端通"><img style="height:30px;" src="/resource/img/mtk.png?v={{$ver}}" alt="雲端通" class="chtimg">雲端通</a>
+							<span class="ntc" name="chtn"></span>
+						</li>
+						<li><a href="/URlogout"  class="itemBtn">登出</a></li>
+					{{elseif $ud}}
+						<li class="link-accout">
+							<img src="/resource/img/acc.jpg?v={{$ver}}" alt="" class="acc_img">
+							<a href="/URmain">
+								{{$ud["name"]}}<span class="ntc" name="ntcn" ></span>
+							</a>
+						</li>
+						<li class="link-accout">
+							<a href="/Cmsg" title="雲端通"><img style="height:30px;" src="/resource/img/mtk.png?v={{$ver}}" alt="雲端通" class="chtimg" >雲端通</a>
+							<span class="ntc" name="chtn"></span>
+						</li>
+						<li><a href="/URlogout"  class="itemBtn">登出</a></li>
+					{{else}}
+						<li ><a href="/URlogin"  class="itemBtn">登入</a></li>
+						<li ><a href="/URregist" class="itemBtn">註冊</a></li>
+					{{/if}}
+				</ul>
+			</div>
+
+			<div class="col-md-12 visible-md visible-lg">
+				<ul id="nav" class="clearfix">
+					<li><a href="/">		
+						<img src="/resource/img/top_about.png?v={{$ver}}" alt="">
+						<br>認識慢箋雲端</a></li>
+					<li><a href="/RXmain">		
+						<img src="/resource/img/top_rx.png?v={{$ver}}" alt="">
+						<br>慢箋上傳</a></li>
+					<li><a href="/AgentMap">		
+						<img src="/resource/img/top_local.png?v={{$ver}}" alt="">
+						<br>尋找藥局</a></li>
+					<li><a href="/fqa">	
+						<img src="/resource/img/top_qa.png?v={{$ver}}" alt="">
+						<br>常見問題FAQ</a></li>
+					<li><a href="/PHmain">		
+						<img src="/resource/img/top_par.png?v={{$ver}}" alt="">
+						<br>合作藥局專區</a></li>
+				</ul>
+			</div>
+		</div>
+		{{if $page!="index"}}
+			<ol class="breadcrumb">
+				<li><img src="/resource/img/home.png?v={{$ver}}" alt=""> <a href="/">首頁</a></li>
+				{{foreach from=$page_org key=pg item=pgName}}
+					<li><a href="/{{$pg}}">{{$pgName}}</a></li>
+				{{/foreach}}
+				<li class="active">{{$page_name}}</li>
+			</ol>
+		{{/if}}
+		<div style="min-height:700px;">
+		<!-- Main Body -->
+		{{include file="$page.tpe"}}
+		</div>
+	</div>
+	
+	<!-- bottom -->
+	<div class="container-fluid footer m-padding0">
+		
+        <div class="row v-hight">
+            <div class="col-md-1-5 text-center item" style="height: 179px;">
+                <h5 class="footer_title" style="display: inline-block;width: 100%;">新手上路</h5>
+                    <p class="col-sm-6 col-md-12"><a href="/">認識雲端慢箋</a></p>
+                    <p class="col-sm-6 col-md-12"><a href="/fqa">雲端慢箋FAQ</a></p>
+            </div>
+            <div class="col-md-1-5 text-center item" style="height: 179px;">
+                <h5 class="footer_title" style="display: inline-block;width: 100%;">慢箋上傳</h5>
+					<p class="col-sm-6 col-md-12"><a href="/fqa?q=3">慢箋上傳方式</a></p>
+					<p class="col-sm-6 col-md-12"><a href="/RXmain">慢箋上傳</a></p>
+            </div>
+                        
+            <div class="col-md-1-5 text-center item" style="height: 179px;">
+                
+                <h5 class="footer_title" style="display: inline-block;width: 100%;">尋找藥局</h5>
+					<p class="col-sm-6 col-md-12"><a href="/AgentMap">尋找合作藥局</a></p>
+					<p class="col-sm-6 col-md-12"><a href="/introPH">推薦合作藥局</a></p>
+			</div>
+        </div>
+
+		<div class="text-center">
+			<div class="row">
+				<p>Copyright © 2019 Prescription Cloud All Rights Reserved. 慢箋雲端 版權所有</p>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

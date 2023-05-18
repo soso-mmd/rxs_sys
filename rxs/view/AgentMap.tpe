@@ -1,0 +1,117 @@
+<script src="resource/js/jquery.twzipcode.min.js"></script>  
+<script>
+	$(function(){
+		$('#twzipcode').twzipcode({
+			'css':['form-control tw-sel', 'form-control tw-sel'],
+			'countyName':'ph_country',
+			'districtName':'ph_district',
+			'countySel':'{{$ph_country}}',
+			'districtSel':'{{$ph_district}}',
+			
+		});
+		$("input[name=zipcode]").hide();
+		$("td[name=phpro]").each(function(){
+			$(this).html($(this).html().replace(/\n/g,"<br>"));
+		});
+			
+	});
+</script>	
+<style>
+.tw-sel{
+	width:auto;
+	display: inherit;
+	margin-right:5px;
+}
+.rating{
+	margin-bottom:0px;
+	padding:0px;
+	width:125px;
+	float:left;
+}
+.rating li{
+	float:left;
+	width:25px;
+	height:25px;
+	background:url(/resource/img/nstar.png?{{$ver}});
+	cursor:pointer;
+}
+.cmt-spn{
+	float:left;
+	height:25px;
+	line-height:25px;
+	font-size:12pt;
+	margin-left:5px; 
+	margin-right:5px;
+}
+.maptab th{
+	font-size:15pt;
+}
+.maptab td{
+	font-size:14pt;
+}
+</style>
+<form id="mapform" style="width:100%;text-align:center;" action="/AgentMap" method="post" >
+	<span id="twzipcode" style=""></span>
+	<input type="submit" class="btn btn-sm btn-primary" value="搜尋">
+	<a href="/introPH" class="btn btn-sm btn-primary">推薦藥局</a>
+</form>
+
+<div style="width:100%;text-align:center;">
+{{foreach from=$agent item=ag}}
+	<div class="row table_list padding-bottom30 padding-top30 element-item transition       " data-category="north" style="left: 15px; top: 0px;">
+		<div class="col-md-5">
+			<img src="photo/ph_img/img{{$ag[0]}}_photo.jpg" class="img-responsive img-rounded" alt="{{$ag[1]}}" style="max-height: 250px;margin-right: auto;margin-left: auto;">
+		</div>
+		<div class="col-md-7 table_list">
+			<div class="table-responsive">
+				<table class="table milk_table_list maptab" cellpadding="10">
+					<tbody>
+					<tr>
+						<th class="col-md-2">名稱</th>
+						<td>
+							{{$ag[1]}}
+							{{if $chat==true}}
+							<a href="/Cmsg?ph={{$ag[0]}}"><img src="/resource/img/mtk.png?v={{$ver}}" style="width:28px;height:28px"></a>
+							{{/if}}
+						</td>
+					</tr>
+					{{if $ag[9]!=0}}
+					<tr>
+						<th class="col-md-2">評價</th>
+						<td>
+							<div style="margin-left:auto;margin-right:auto;width:200px;">
+								<span class="cmt-spn">{{$ag[9]}}</span>
+								<ul class="rating"> 
+									{{for $i = 1 to 5}}
+										<li style="background:url(/resource/img/{{if $i > $ag[9]}}n{{/if}}star.png?{{$ver}}">
+											{{if $i-$ag[9] < 1 && $i > $ag[9]}} <div style="background:url(/resource/img/star.png);height:25px;width:{{($ag[9]-($i-1))*25}}px;"></div>{{/if}}
+										</li> 
+									{{/for}}
+								</ul>
+								<span class="cmt-spn">(<a href="/PHcmt?p={{$ag[0]}}" style="color:blue;"><u>{{$ag[10]}}</u></a>)</span>
+							</div>
+						</td>
+					</tr>
+					{{/if}}
+					<tr>
+						<th class="col-md-2">地址</th><td>{{$ag[2]}}{{$ag[3]}}{{$ag[4]}} -<a class="greenfont" href="https://www.google.com.tw/maps/place/{{$ag[2]}}{{$ag[3]}}{{$ag[4]}}" target="_blank">map</a></td>
+					</tr>
+					<tr>
+						<th class="col-md-2">電話</th><td>{{$ag[7]}}</td>
+					</tr>
+					<tr>
+						<th class="col-md-2">營業日</th><td>{{$ag[5]}}</td>
+					</tr>
+					<tr>
+						<th class="col-md-2">營業時間</th><td>{{$ag[6]}}</td>
+					</tr>
+					<tr>
+						<th class="col-md-2">簡介</th><td name="phpro">{{$ag[8]}}</td>
+					</tr>
+				</tbody></table>
+				
+			</div>
+		</div>
+	</div>
+{{/foreach}}
+</div>

@@ -1,0 +1,110 @@
+ 	<!--link rel="stylesheet" type="text/css" href="resource/css/jquery.datetimepicker.css"> 
+	<script src="resource/js/jquery.datetimepicker.full.js"></script-->  
+	<style>
+		.regist_input{
+			padding-left: 8px;
+			border-style: solid;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			width:100%;
+			height: 35px;
+			font-size: 15pt;
+			line-height: 15px;
+			color: #21272a;
+			font-weight: bolder;
+			margin-top:15px;
+		}
+		.regist_form{
+			text-align:center;
+			max-width:500px;
+			margin-left:auto;
+			margin-right:auto;
+		}
+		.birStr{
+			color:#757575;
+			/*float:left;*/
+			height:35px;
+			line-height:35px;
+		}
+		.birSel{
+			color: #21272a;
+			font-weight: bolder;
+			font-size: 15pt;
+			line-height: 15px;
+			height: 34px;
+			/*float:left;*/
+			margin-top:0px;
+			padding-left:0px;
+			margin-left:10px;
+			border-width: 0;
+			border-bottom: 1px solid #676f77;
+			border-style: solid;
+		}
+	</style>
+	<script type="text/javascript">
+		$(function(){
+			/*$("#birth").datetimepicker({
+				minView: "month",
+				format: 'Y-m-d',
+				timepicker:false,
+			});*/
+			$("#register_form").submit(function(e){
+				if($("#uname").val()==''){
+					alert('姓名不能空白');
+					$("#uname").focus();
+					return false;
+				}
+				if($("#nid").val()==''){
+					alert('身分證號碼不能空白');
+					$("#nid").focus();
+					return false;
+				}
+				if($("#phone").val()==''){
+					alert('手機不能空白');
+					$("#phone").focus();
+					return false;
+				}
+			});
+		});
+	</script>
+	
+	<div style="margin-bottom:70px;">
+		<h1 style=" font-size: 40px;letter-spacing: 3px;line-height: 100%;text-align: center;">新增慢箋使用者</h1>
+		<form id="register_form" method="post" autocomplete="true" class="regist_form" action="/RXadd">
+			<div style="margin-bottom: 15px;">
+				<input name="uname" type="text" placeholder="姓名" class="regist_input">
+				<div class="regist_input" style="text-align;">
+					<span class="birStr" style="float:left;"> 生日 </span>
+						<select name="birYear" class="birSel">
+							{{for $y = $year-120 to $year}}
+							<option value="{{$y}}">{{$y}}</option>
+							{{/for}}
+						</select> 
+						<span class="birStr"> 年 </span> 
+						<select name="birMonth" class="birSel">
+							{{for $m = 1 to 12}}
+							<option value="{{$m}}">{{$m}}</option>
+							{{/for}}
+						</select> 
+						<span class="birStr"> 月 </span> 
+						<select name="birDay" class="birSel">
+							{{for $d = 1 to 31}}
+							<option value="{{$d}}">{{$d}}</option>
+							{{/for}}
+						</select> 
+						<span class="birStr"> 日 </span> 
+				</div>
+				<select name="gender" placeholder="性別" class="regist_input">
+					<option value="man">男</option>
+					<option value="woman">女</option>
+				</select>
+				<input name="nid" type="text" placeholder="身分證號碼" class="regist_input">
+				<input id="phonenum" name="phone" type="tel" placeholder="電話號碼 / 手機" autocomplete="tel" class="regist_input">
+				<div style="width:100%;">
+					<input id="cap_code" name="cap_code" type="text" placeholder="驗證碼" class="regist_input" style="width:70%;float:left;">
+					<img class="capimg" onClick="javascript:$(this).attr('src',$(this).attr('src')+'?'+Math.random());" src="/captcha/cap.php">  	
+				</div>
+			</div>
+			<input type="submit" class="btn btn-default btn-lg" value="新增">
+		</form>
+	</div>

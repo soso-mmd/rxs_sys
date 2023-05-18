@@ -1,0 +1,4 @@
+rewrite ^/action/([a-zA-Z]+)$ /index.php?type=ac&page=$1 break;
+rewrite ^/([a-zA-Z\_]+)$ /index.php?page=$1 break;
+rewrite ^md/([a-zA-Z]+)$ /index.php?type=md&page=$1 break;
+rewrite ^ur/([a-zA-Z]+)$ /index.php?type=ur&page=$1 break;

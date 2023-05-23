@@ -1,5 +1,5 @@
 <?php
-	// ini_set('display_errors', 1);
+	// ini_set('display_errors', 1);//123
 	require_once("./config/config_sys.php");
 	require_once(PATH_HOME."config/config_smarty.php");
 	require_once(PATH_HOME."config/config_redis.php");

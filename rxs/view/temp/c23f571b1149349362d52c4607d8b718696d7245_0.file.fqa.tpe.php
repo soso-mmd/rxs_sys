@@ -1,4 +1,5 @@
 <?php
+
 /* Smarty version 3.1.33, created on 2023-05-08 08:03:42
   from 'C:\wamp64\www\rxs\view\fqa.tpe' */
 
